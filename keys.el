@@ -21,9 +21,10 @@
 ;; Recargar el buffer actual con C-SPC b r
 (global-set-key (kbd "C-SPC b r") #'revert-buffer)
 
-;; Todos los buffers con C-SPC b i / matar el actual con C-SPC b d
+;; Todos los buffers con C-SPC b i / matar el actual con C-SPC b d / C-SPC b k
 (global-set-key (kbd "C-SPC b i") #'ibuffer)
 (global-set-key (kbd "C-SPC b d") #'kill-current-buffer)
+(global-set-key (kbd "C-SPC b k") #'kill-current-buffer)
 
 ;; Ver la lista de buffers con C-SPC ,
 (global-set-key (kbd "C-SPC ,") #'ibuffer)
@@ -71,8 +72,16 @@
 (global-set-key (kbd "C-SPC o a") #'agent-shell)
 
 ;; Workspaces (perspectiva) estilo Doom: C-SPC TAB ...
+(defun my/persp-new ()
+  "Pide un nombre y crea un workspace nuevo, cambiando a él."
+  (interactive)
+  (let ((name (read-string "Nuevo workspace: ")))
+    (unless (string-empty-p name)
+      (persp-switch name))))
+
 (global-set-key (kbd "C-SPC TAB TAB") #'persp-switch)
 (global-set-key (kbd "C-SPC TAB .") #'persp-switch)
+(global-set-key (kbd "C-SPC TAB n") #'my/persp-new)
 (global-set-key (kbd "C-SPC TAB k") #'persp-kill)
 (global-set-key (kbd "C-SPC TAB r") #'persp-rename)
 
