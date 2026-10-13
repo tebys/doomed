@@ -48,7 +48,55 @@
 
 ;; Shell de agentes IA (agent-shell, basado en ACP)
 (use-package agent-shell
-  :ensure t)
+  :ensure t
+  :config
+  (setq agent-shell-permission-responder-function
+        #'agent-shell-permission-allow-always))
+
+;; Notificaciones del sistema cuando un agent-shell necesita atención.
+;; macOS usa AppleScript (ns-do-applescript); Linux usa el nativo vía D-Bus.
+(defun my/agent-shell-notify (title body)
+  (cond
+   ((fboundp 'ns-do-applescript)
+    (let ((q (lambda (s) (format "\"%s\"" (replace-regexp-in-string "[\"\\\\]" "\\\\\\&" s)))))
+      (ns-do-applescript
+       (format "display notification %s with title %s sound name \"Glass\""
+               (funcall q body) (funcall q title)))))
+   ((eq system-type 'gnu/linux)
+    (if (executable-find "notify-send")
+        (start-process "agent-shell-notify" nil
+                       "notify-send" "-a" "agent-shell" title body)
+      (when (fboundp 'notifications-notify)
+        (notifications-notify :title title
+                              :body body
+                              :app-name "agent-shell")))
+    (when (executable-find "canberra-gtk-play")
+      (start-process "agent-shell-sound" nil
+                     "canberra-gtk-play" "-i" "bell")))))
+
+(defun my/agent-shell-on-event (event)
+  (let ((buf (current-buffer))
+        (data (map-elt event :data)))
+    (message "agent-shell event: %s" (map-elt event :event))
+    (pcase (map-elt event :event)
+      ('permission-request
+       (my/agent-shell-notify "Agent Shell: Needs Input" (buffer-name buf)))
+      ('turn-complete
+       (my/agent-shell-notify
+        (if (member (map-elt data :stop-reason) '("end_turn" "cancelled"))
+            "Agent Shell: Idle" "Agent Shell: Failed")
+        (buffer-name buf)))
+      ('error
+       (my/agent-shell-notify "Agent Shell: Failed"
+                              (or (map-elt data :message) (buffer-name buf)))))))
+
+(defun my/agent-shell-subscribe ()
+  (dolist (event '(permission-request turn-complete error))
+    (agent-shell-subscribe-to :shell-buffer (current-buffer)
+                              :event event
+                              :on-event #'my/agent-shell-on-event)))
+
+(add-hook 'agent-shell-mode-hook #'my/agent-shell-subscribe)
 
 ;; Workspaces (perspectivas) al estilo Doom: C-SPC TAB ...
 ;; El guard (unless persp-mode) evita que la recarga de config duplique el modo.
