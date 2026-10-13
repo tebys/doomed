@@ -1,0 +1,97 @@
+;; -*- lexical-binding: t; -*-
+
+;; =============================================================================
+;; ATAJOS DE TECLADO PERSONALIZADOS (COSAS DE EMACS)
+;; =============================================================================
+;; Los gestos estilo Vim (text objects, splits, búsqueda, yy/p) viven en vim.el.
+
+;; Abrir archivos/directorios con C-SPC .
+;; C-SPC está reservado por defecto a 'set-mark-command', hay que liberarlo
+;; para poder usarlo como prefijo.
+(global-unset-key (kbd "C-SPC"))
+(defun my/open-file-or-dir ()
+  "Abre un directorio en Dired; si es un archivo (aunque no exista), lo abre."
+  (interactive)
+  (let ((f (read-file-name "Abrir: ")))
+    (if (file-directory-p f)
+        (dired f)
+      (find-file f))))
+(global-set-key (kbd "C-SPC .") #'my/open-file-or-dir)
+
+;; Recargar el buffer actual con C-SPC b r
+(global-set-key (kbd "C-SPC b r") #'revert-buffer)
+
+;; Todos los buffers con C-SPC b i / matar el actual con C-SPC b d
+(global-set-key (kbd "C-SPC b i") #'ibuffer)
+(global-set-key (kbd "C-SPC b d") #'kill-current-buffer)
+
+;; Ver la lista de buffers con C-SPC ,
+(global-set-key (kbd "C-SPC ,") #'ibuffer)
+
+;; Magit status con C-SPC g s (gg quedó para "ir al inicio", estilo vim)
+(global-set-key (kbd "C-SPC g s") #'magit-status)
+
+;; Moverse entre ventanas con C-S-<flecha> (Ctrl + Shift + flecha),
+;; dejando S-<flecha> libre para seleccionar texto
+(global-set-key (kbd "C-S-<left>") #'windmove-left)
+(global-set-key (kbd "C-S-<right>") #'windmove-right)
+(global-set-key (kbd "C-S-<up>") #'windmove-up)
+(global-set-key (kbd "C-S-<down>") #'windmove-down)
+
+;; Copiar/pegar al estilo del sistema con Super+C / Super+V
+(global-set-key (kbd "s-c") #'kill-ring-save)
+(global-set-key (kbd "s-v") #'yank)
+
+;; Copiar con C-c y pegar con C-v (como en tu config de Doom)
+(global-set-key (kbd "C-c") #'copy-region-as-kill)
+(global-set-key (kbd "C-v") #'yank)
+
+;; Pegar desde el historial de cliphist con C-SPC c h
+(defun my/cliphist-paste ()
+  "Muestra el historial de cliphist usando Rofi y pega la selección."
+  (interactive)
+  (let ((chosen-text (shell-command-to-string
+                      "cliphist list | rofi -dmenu -p 'Emacs Cliphist' | cliphist decode")))
+    (unless (string-empty-p chosen-text)
+      (insert chosen-text))))
+
+(global-set-key (kbd "C-SPC c h") #'my/cliphist-paste)
+
+;; Tamaño de fuente estilo Doom: Super+= / Super+- / Super+0
+(global-set-key (kbd "s-=") #'my/increase-font-size)
+(global-set-key (kbd "s--") #'my/decrease-font-size)
+(global-set-key (kbd "s-0") #'my/reset-font-size)
+
+;; Fuente grande con C-SPC t b
+(global-set-key (kbd "C-SPC t b") #'my-big-font-mode)
+
+;; Abrir terminal/consola
+(global-set-key (kbd "C-SPC o e") #'eshell)
+(global-set-key (kbd "C-SPC o t") #'vterm)
+(global-set-key (kbd "C-SPC o a") #'agent-shell)
+
+;; Workspaces (perspectiva) estilo Doom: C-SPC TAB ...
+(global-set-key (kbd "C-SPC TAB TAB") #'persp-switch)
+(global-set-key (kbd "C-SPC TAB .") #'persp-switch)
+(global-set-key (kbd "C-SPC TAB k") #'persp-kill)
+(global-set-key (kbd "C-SPC TAB r") #'persp-rename)
+
+;; Recargar toda la configuración (init.el y módulos) con C-SPC h r
+(defvar my/config-dir
+  (file-name-directory (or load-file-name buffer-file-name))
+  "Directorio donde vive esta configuración.")
+
+(defun my/reload-config ()
+  "Recarga init.el y los módulos propios de esta configuración."
+  (interactive)
+  (let ((dir my/config-dir))
+    (dolist (feat '(ui keys vim))
+      (when (featurep feat)
+        (unload-feature feat t)))
+    (add-to-list 'load-path dir)
+    (load (expand-file-name "init.el" dir) nil t)
+    (message "Configuración recargada")))
+
+(global-set-key (kbd "C-SPC h r") #'my/reload-config)
+
+(provide 'keys) ;; Esto permite que Emacs pueda "requerir" este archivo como un módulo

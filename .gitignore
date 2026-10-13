@@ -1,0 +1,22 @@
+# --- Artefactos generados por Emacs / específicos de la máquina ---
+elpa/
+eln-cache/
+transient/
+eshell/
+auto-save-list/
+
+# Custom (regenerado por `customize`)
+custom.el
+custom.el~
+
+# Archivos de backup y autosave
+*~
+\#*\#
+.\#*
+
+# --- Datos locales / privados (no publicar) ---
+agent/
+.agent-shell/
+projectile-bookmarks.eld
+projectile-frecency.eld
+tramp
