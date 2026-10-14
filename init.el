@@ -40,3 +40,16 @@
 (setq select-enable-clipboard t)
 (setq select-enable-primary t)
 (setq save-interprogram-paste-before-kill t)
+
+;; =============================================================================
+;; 4. ARCHIVOS DE AUTOGUARDADO / RESPALDO / LOCK FUERA DE LOS PROYECTOS
+;; =============================================================================
+;; #archivo# (autoguardado), archivo~ (respaldo) y .#archivo (lock) dejan de
+;; crearse junto al archivo original. Se mantienen fuera del repo en ~/.cache.
+(let ((dir (expand-file-name "emacs/" "~/.cache/")))
+  (make-directory (concat dir "auto-save/") t)
+  (make-directory (concat dir "backup/") t)
+  (setq auto-save-file-name-transforms `((".*" ,(concat dir "auto-save/") t))
+        auto-save-list-file-prefix (concat dir "auto-save/.saves-")
+        backup-directory-alist `((".*" . ,(concat dir "backup/")))))
+(setq create-lockfiles nil) ; los .#archivo son symlinks dentro del proyecto
