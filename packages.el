@@ -51,7 +51,35 @@
   :ensure t
   :config
   (setq agent-shell-permission-responder-function
-        #'agent-shell-permission-allow-always))
+        #'agent-shell-permission-allow-always)
+
+  ;; Autocompactar: al terminar un turno, si el contexto usado supera el
+  ;; umbral, se envía /compact al agente.
+  (defvar my/agent-shell-compact-threshold 150000
+    "Tokens de contexto a partir de los cuales se autocompacta.")
+
+  (defun my/agent-shell-maybe-compact (shell-buffer)
+    "Envía /compact en SHELL-BUFFER si el contexto supera el umbral."
+    (when (buffer-live-p shell-buffer)
+      (with-current-buffer shell-buffer
+        (let ((used (map-nested-elt (agent-shell--state) '(:usage :context-used))))
+          (when (and (numberp used)
+                     (> used my/agent-shell-compact-threshold)
+                     ;; Evita reenviar mientras el contador aún no refleja el compact.
+                     (not (eq used (bound-and-true-p my/agent-shell--compacted-at))))
+            (setq-local my/agent-shell--compacted-at used)
+            (message "agent-shell: contexto en %dk, compactando..." (/ used 1000))
+            (agent-shell-insert :text "/compact" :submit t :no-focus t
+                                :shell-buffer shell-buffer))))))
+
+  (defun my/agent-shell-setup-autocompact ()
+    (let ((buf (current-buffer)))
+      (agent-shell-subscribe-to
+       :shell-buffer buf
+       :event 'turn-complete
+       :on-event (lambda (_event) (my/agent-shell-maybe-compact buf)))))
+
+  (add-hook 'agent-shell-mode-hook #'my/agent-shell-setup-autocompact))
 
 ;; Notificaciones del sistema cuando un agent-shell necesita atención.
 ;; macOS usa AppleScript (ns-do-applescript); Linux usa el nativo vía D-Bus.
