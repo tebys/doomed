@@ -5,7 +5,11 @@
 ;; =============================================================================
 
 ;; Control de versiones con Magit
-(use-package magit)
+(use-package magit
+  :custom
+  ;; Guarda sin preguntar los buffers modificados del repo antes de pull,
+  ;; commit, etc. (el valor por defecto, t, pregunta cada vez).
+  (magit-save-repository-buffers 'dontask))
 
 ;; Servidor de lenguaje (LSP). Viene incluido en Emacs, no se descarga.
 (use-package eglot
@@ -46,6 +50,22 @@
   :config
   (projectile-mode 1)
   (define-key (current-global-map) (kbd "C-SPC p") 'projectile-command-map))
+
+;; Org-babel: ejecutar bloques de código dentro de org (C-c C-c sobre el bloque).
+;; Org viene incluido en Emacs; solo se habilitan los lenguajes.
+(use-package org
+  :ensure nil
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (shell . t)
+     (python . t)
+     (js . t)))
+  ;; Ejecutar bloques sin pedir confirmación (ojo con .org de terceros).
+  (setq org-confirm-babel-evaluate nil)
+  ;; Para que <s TAB inserte un #+begin_src (estilo Doom).
+  (require 'org-tempo))
 
 ;; Terminales
 (use-package eshell) ; incluido en Emacs
