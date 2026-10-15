@@ -16,6 +16,11 @@
 (use-package fennel-mode
   :mode "\\.fnl\\'")
 
+;; Soporte para mise
+(use-package mise
+  :ensure t
+  :config (global-mise-mode))
+
 ;; =============================================================================
 ;; MINIBUFFER / M-x al estilo Doom (vertico + orderless + marginalia)
 ;; =============================================================================
