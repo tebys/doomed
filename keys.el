@@ -85,6 +85,44 @@
 (global-set-key (kbd "C-SPC TAB k") #'persp-kill)
 (global-set-key (kbd "C-SPC TAB r") #'persp-rename)
 
+;; =============================================================================
+;; map! — versión mínima de la macro de Doom
+;; =============================================================================
+;; Uso:  (map! :map org-mode-map :v "SPC t a" #'merge-plan)
+;;       (map! "SPC t b" #'my-big-font-mode)          ; global
+;; - :map KEYMAP   aplica a ese keymap (si aún no existe, espera a que cargue
+;;                 la feature, ej. org-mode-map -> org). Sin :map, es global.
+;; - :desc "txt"   se acepta e ignora.
+
+(defun my/map--bind (keymap states key def)
+  "Enlaza KEY a DEF en KEYMAP (símbolo, o nil para global) según STATES."
+  (let* ((seq (kbd key))
+         (region-only (and states (cl-every (lambda (s) (memq s '(:v :x))) states)))
+         (def (if (and region-only (or (symbolp def) (commandp def)))
+                  `(menu-item "" ,def :filter
+                              ,(lambda (cmd) (and (use-region-p) cmd)))
+                def)))
+    (cond
+     ((null keymap) (global-set-key seq def))
+     ((boundp keymap) (define-key (symbol-value keymap) seq def))
+     (t (with-eval-after-load
+            (intern (replace-regexp-in-string "\\(?:-mode\\)?-map\\'" ""
+                                              (symbol-name keymap)))
+          (define-key (symbol-value keymap) seq def))))))
+
+(defmacro map! (&rest args)
+  "Define atajos al estilo de `map!' de Doom (subconjunto). Ver comentario arriba."
+  (let (keymap states forms)
+    (while args
+      (let ((arg (pop args)))
+        (cond
+         ((eq arg :map) (setq keymap (pop args)))
+         ((eq arg :desc) (pop args))
+         ((keywordp arg) (setq states (list arg)))
+         (t (let ((def (pop args)))
+              (push `(my/map--bind ',keymap ',states ,arg ,def) forms))))))
+    `(progn ,@(nreverse forms))))
+
 ;; Recargar toda la configuración (init.el y módulos) con C-SPC h r
 (defvar my/config-dir
   (file-name-directory (or load-file-name buffer-file-name))
