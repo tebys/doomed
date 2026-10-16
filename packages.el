@@ -59,11 +59,11 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
-     (shell . t)
-     (python . t)
-     (js . t)))
+     (shell . t)))
   ;; Ejecutar bloques sin pedir confirmación (ojo con .org de terceros).
   (setq org-confirm-babel-evaluate nil)
+  ;; Seleccionar con S-flecha en org
+  (setq org-support-shift-select t)
   ;; Para que <s TAB inserte un #+begin_src (estilo Doom).
   (require 'org-tempo))
 
