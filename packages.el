@@ -169,6 +169,37 @@
   :config
   (define-key projectile-command-map (kbd "p") #'projectile-persp-switch-project))
 
+;; Círculo con el estado del agent-shell junto a cada perspectiva en el
+;; prompt de C-SPC TAB TAB (también aparece en persp-kill / persp-rename).
+;; El estado se calcula al abrir el prompt (no se refresca en vivo).
+(defun my/persp-agent-status (name)
+  "Estado del agent-shell del proyecto NAME: blocked, busy o ready.
+Si el proyecto tiene varios shells, gana el más urgente."
+  (let ((statuses (cl-loop for buf in (agent-shell-buffers)
+                           when (with-current-buffer buf
+                                  (and (derived-mode-p 'agent-shell-mode)
+                                       (ignore-errors
+                                         (equal name (agent-shell--project-name)))))
+                           collect (agent-shell-status :shell-buffer buf))))
+    (cond ((memq 'blocked statuses) 'blocked)
+          ((memq 'busy statuses) 'busy)
+          ((memq 'ready statuses) 'ready))))
+
+(defun my/persp-agent-annotation (name)
+  "Anotación para el candidato NAME: círculo con estado, o vacío."
+  (when-let ((st (my/persp-agent-status name)))
+    (format "  %s"
+            (propertize "●" 'face (pcase st
+                                    ('blocked 'agent-shell-error)
+                                    ('busy 'agent-shell-warning)
+                                    (_ 'agent-shell-success))))))
+
+(setq persp-interactive-completion-function
+      (lambda (&rest args)
+        (let ((completion-extra-properties
+               `(:annotation-function ,#'my/persp-agent-annotation)))
+          (apply #'completing-read args))))
+
 ;; NOTA: init.el lo carga con `load` (no con require) para que la recarga de
 ;; config re-ejecute siempre los use-package. Este provide queda para poder
 ;; `require` en otros contextos sin error.
