@@ -33,6 +33,10 @@
 ;; packages se carga con `load` (no require) para que la recarga de config
 ;; (C-SPC h r) re-ejecute siempre los use-package dentro.
 (load "packages.el" nil t)
+;; Igual que packages: agents.el (config de agent-shell) con `load` para que
+;; h r lo re-ejecute. Va después de packages porque toca persp-interactive-
+;; completion-function.
+(load "agents.el" nil t)
 
 ;; =============================================================================
 ;; 3. PORTAPAPELES / CLIPBOARD
