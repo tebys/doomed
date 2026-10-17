@@ -47,17 +47,6 @@
 (global-set-key (kbd "C-c") #'copy-region-as-kill)
 (global-set-key (kbd "C-v") #'yank)
 
-;; Pegar desde el historial de cliphist con C-SPC c h
-(defun my/cliphist-paste ()
-  "Muestra el historial de cliphist usando Rofi y pega la selección."
-  (interactive)
-  (let ((chosen-text (shell-command-to-string
-                      "cliphist list | rofi -dmenu -p 'Emacs Cliphist' | cliphist decode")))
-    (unless (string-empty-p chosen-text)
-      (insert chosen-text))))
-
-(global-set-key (kbd "C-SPC c h") #'my/cliphist-paste)
-
 ;; Tamaño de fuente estilo Doom: Super+= / Super+- / Super+0
 (global-set-key (kbd "s-=") #'my/increase-font-size)
 (global-set-key (kbd "s--") #'my/decrease-font-size)
