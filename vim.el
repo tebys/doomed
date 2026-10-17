@@ -33,15 +33,6 @@
 (global-set-key (kbd "C-w o") #'delete-other-windows)
 (global-set-key (kbd "C-w c") #'delete-window)
 
-;; Buscar dentro del buffer con C-/ (como el / de vim).
-;; C-/_ sigue siendo undo. La inserción del carácter "/" queda intacta.
-(global-set-key (kbd "C-/") #'isearch-forward)
-
-;; gg = ir al inicio del buffer / G = ir al final (estilo vim)
-(global-set-key (kbd "C-SPC g g") #'beginning-of-buffer)
-(global-set-key (kbd "C-SPC g G") #'end-of-buffer)
-(global-set-key (kbd "C-SPC G") #'end-of-buffer)
-
 ;; ---------------------------------------------------------------------------
 ;; Text objects (i/a) sobre paréntesis y comillas dobles
 ;; ---------------------------------------------------------------------------
