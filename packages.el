@@ -67,6 +67,10 @@
   ;; Para que <s TAB inserte un #+begin_src (estilo Doom).
   (require 'org-tempo))
 
+(use-package ob-async
+  :after org
+  :ensure t)
+
 ;; Terminales
 (use-package eshell) ; incluido en Emacs
 (use-package vterm)
