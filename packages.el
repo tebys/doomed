@@ -28,7 +28,9 @@
 ;; Soporte para mise
 (use-package mise
   :ensure t
-  :config (global-mise-mode))
+  :commands agent-shell
+  :init
+  (advice-add 'agent-shell :before (lambda (&rest _) (global-mise-mode 1))))
 
 ;; =============================================================================
 ;; MINIBUFFER / M-x al estilo Doom (vertico + orderless + marginalia)
