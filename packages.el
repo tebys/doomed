@@ -71,6 +71,12 @@
   :after org
   :ensure t)
 
+;; Dired: con dos ventanas abiertas, copiar/mover (C, R) propone la otra como destino.
+(use-package dired
+  :ensure nil
+  :config
+  (setq dired-dwim-target t))
+
 ;; Terminales
 (use-package eshell) ; incluido en Emacs
 (use-package vterm)
