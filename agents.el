@@ -11,6 +11,7 @@
 ;; Shell de agentes IA (agent-shell, basado en ACP)
 (use-package agent-shell
   :ensure t
+  :bind ("C-SPC o a" . agent-shell)
   :config
   (setq agent-shell-permission-responder-function
         #'agent-shell-permission-allow-always)
