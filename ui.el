@@ -49,19 +49,6 @@
            (size (and (stringp font) (font-get (font-parse font) :size))))
       (setq my/font-height-base (round (* (if (numberp size) size 10) 10))))))
 
-(define-minor-mode my-big-font-mode
-  "Alterna el tamaño grande de fuente (estilo Doom)."
-  :init-value nil
-  (if my-big-font-mode
-      (progn
-        (my/ensure-font-height-base)
-        (set-face-attribute 'default nil :height
-                            (round (* my/font-height-base my/big-font-ratio))))
-    (when my/font-height-base
-      (set-face-attribute 'default nil :height my/font-height-base))))
-
-(my-big-font-mode 1) ; La fuente por defecto arranca en 1.5x
-
 (defun my/increase-font-size (n)
   "Aumenta la fuente default en N pasos (10 décimas de punto c/u)."
   (interactive "p")
@@ -80,7 +67,6 @@
   "Restaura el tamaño base de la fuente default."
   (interactive)
   (my/ensure-font-height-base)
-  (setq my-big-font-mode nil)
   (set-face-attribute 'default nil :height my/font-height-base))
 
 (provide 'ui) ;; Esto permite que Emacs pueda "requerir" este archivo como un módulo

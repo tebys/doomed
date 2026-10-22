@@ -52,9 +52,6 @@
 (global-set-key (kbd "s--") #'my/decrease-font-size)
 (global-set-key (kbd "s-0") #'my/reset-font-size)
 
-;; Fuente grande con C-SPC t b
-(global-set-key (kbd "C-SPC t b") #'my-big-font-mode)
-
 ;; Abrir terminal/consola
 (global-set-key (kbd "C-SPC o e") #'eshell)
 (global-set-key (kbd "C-SPC o t") #'vterm)
