@@ -30,7 +30,7 @@
 (global-set-key (kbd "C-SPC ,") #'ibuffer)
 
 ;; Magit status con C-SPC g s (gg quedó para "ir al inicio", estilo vim)
-(global-set-key (kbd "C-SPC g s") #'magit-status)
+(global-set-key (kbd "C-SPC g g") #'magit-status)
 
 ;; Moverse entre ventanas con C-S-<flecha> (Ctrl + Shift + flecha),
 ;; dejando S-<flecha> libre para seleccionar texto
@@ -43,7 +43,7 @@
 (global-set-key (kbd "s-c") #'kill-ring-save)
 (global-set-key (kbd "s-v") #'yank)
 
-;; Copiar con C-c y pegar con C-v (como en tu config de Doom)
+;; Copiar con C-c y pegar con C-v
 (global-set-key (kbd "C-c") #'copy-region-as-kill)
 (global-set-key (kbd "C-v") #'yank)
 
