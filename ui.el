@@ -45,28 +45,44 @@
 (defun my/ensure-font-height-base ()
   "Guarda la altura base (décimas de punto) desde la fuente original del frame."
   (unless my/font-height-base
-    (let* ((font (face-attribute 'default :font nil 'default))
-           (size (and (stringp font) (font-get (font-parse font) :size))))
-      (setq my/font-height-base (round (* (if (numberp size) size 10) 10))))))
+    (let ((height (face-attribute 'default :height)))
+      (setq my/font-height-base
+            (cond ((and (numberp height) (>= height 50)) (round height))
+                  ((and (numberp height) (> height 0)) (round (* height 100)))
+                  (t 100))))))
+
+(defun my/clear-local-text-scale ()
+  "Quita el escalado de texto local (text-scale) de todos los buffers.
+El escalado local pisa al global y hace que solo cambie el buffer actual,
+dejando la mode-line, el minibuffer, magit, etc. con el tamaño viejo."
+  (dolist (buffer (buffer-list))
+    (with-current-buffer buffer
+      (when (bound-and-true-p text-scale-mode)
+        (text-scale-mode -1)))))
+
+(defun my/set-font-height (height)
+  "Aplica HEIGHT (décimas de punto) a la fuente default en toda la interfaz."
+  (my/clear-local-text-scale)
+  (set-face-attribute 'default nil :height height))
 
 (defun my/increase-font-size (n)
   "Aumenta la fuente default en N pasos (10 décimas de punto c/u)."
   (interactive "p")
   (my/ensure-font-height-base)
   (setq my/font-height-base (+ my/font-height-base (* 10 n)))
-  (set-face-attribute 'default nil :height my/font-height-base))
+  (my/set-font-height my/font-height-base))
 
 (defun my/decrease-font-size (n)
   "Disminuye la fuente default en N pasos (10 décimas de punto c/u)."
   (interactive "p")
   (my/ensure-font-height-base)
   (setq my/font-height-base (max 50 (- my/font-height-base (* 10 n))))
-  (set-face-attribute 'default nil :height my/font-height-base))
+  (my/set-font-height my/font-height-base))
 
 (defun my/reset-font-size ()
   "Restaura el tamaño base de la fuente default."
   (interactive)
   (my/ensure-font-height-base)
-  (set-face-attribute 'default nil :height my/font-height-base))
+  (my/set-font-height my/font-height-base))
 
 (provide 'ui) ;; Esto permite que Emacs pueda "requerir" este archivo como un módulo
