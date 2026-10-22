@@ -63,6 +63,7 @@
 ;; Org viene incluido en Emacs; solo se habilitan los lenguajes.
 (use-package org
   :ensure nil
+  :mode ("\\.org\\'" . org-mode)
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages
