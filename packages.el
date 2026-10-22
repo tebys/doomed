@@ -1,5 +1,10 @@
 ;; -*- lexical-binding: t; -*-
 
+;; For debugging and optimizing
+;;(setq use-package-verbose t)
+;;(setq use-package-compute-statistics t) ;; M-x use-package-report
+
+
 ;; =============================================================================
 ;; PAQUETES Y EXTENSIONES
 ;; =============================================================================
