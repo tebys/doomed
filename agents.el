@@ -46,6 +46,31 @@
 
   (add-hook 'agent-shell-mode-hook #'my/agent-shell-setup-autocompact)
 
+  ;; Directorios extra a los que Claude puede acceder además del cwd del
+  ;; proyecto. agent-shell no lo expone, pero session-meta se envía como
+  ;; _meta y claude-agent-acp pasa claudeCode.options al SDK
+  ;; (opción additionalDirectories, equivalente a --add-dir).
+  (defvar my/agent-shell-additional-directories
+    '("~/Projects" "~/demos/")
+    "Directorios adicionales a los que se le da acceso a Claude.")
+
+  (defun my/agent-shell-add-directories (config)
+    "Agrega `my/agent-shell-additional-directories' al session-meta de CONFIG."
+    (let* ((dirs (vconcat (mapcar #'expand-file-name
+                                  my/agent-shell-additional-directories)))
+           (meta (copy-tree (map-elt config :session-meta)))
+           (cc (assq 'claudeCode meta))
+           (opts (assq 'options (cdr cc))))
+      (when (and cc opts)
+        (setcdr opts (cons (cons 'additionalDirectories dirs)
+                           (assq-delete-all 'additionalDirectories (cdr opts))))
+        (setq config (cons (cons :session-meta meta)
+                           (assq-delete-all :session-meta (copy-sequence config)))))
+      config))
+
+  (advice-add 'agent-shell-anthropic-make-claude-code-config
+              :filter-return #'my/agent-shell-add-directories))
+
 ;; Notificaciones del sistema cuando un agent-shell necesita atención.
 ;; macOS usa AppleScript (ns-do-applescript); Linux usa el nativo vía D-Bus.
 (defun my/agent-shell-notify (title body)
