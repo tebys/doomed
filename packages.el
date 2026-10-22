@@ -87,7 +87,8 @@
 
 ;; Terminales
 (use-package eshell) ; incluido en Emacs
-(use-package vterm)
+(use-package vterm
+  :bind ("C-SPC o t" . vterm))
 
 ;; La config de agent-shell (y anotaciones de perspectivas) vive en agents.el,
 ;; que init.el carga después de este archivo.

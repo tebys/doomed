@@ -54,7 +54,6 @@
 
 ;; Abrir terminal/consola
 (global-set-key (kbd "C-SPC o e") #'eshell)
-(global-set-key (kbd "C-SPC o t") #'vterm)
 (global-set-key (kbd "C-SPC o a") #'agent-shell)
 
 ;; Workspaces (perspectiva) estilo Doom: C-SPC TAB ...
