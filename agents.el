@@ -44,7 +44,7 @@
        :event 'turn-complete
        :on-event (lambda (_event) (my/agent-shell-maybe-compact buf)))))
 
-  (add-hook 'agent-shell-mode-hook #'my/agent-shell-setup-autocompact))
+  (add-hook 'agent-shell-mode-hook #'my/agent-shell-setup-autocompact)
 
 ;; Notificaciones del sistema cuando un agent-shell necesita atención.
 ;; macOS usa AppleScript (ns-do-applescript); Linux usa el nativo vía D-Bus.
