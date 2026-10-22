@@ -86,7 +86,8 @@
   (setq dired-dwim-target t))
 
 ;; Terminales
-(use-package eshell) ; incluido en Emacs
+(use-package eshell
+  :bind ("C-SPC o e" . eshell)) ; incluido en Emacs
 (use-package vterm
   :bind ("C-SPC o t" . vterm))
 
