@@ -57,3 +57,15 @@
         auto-save-list-file-prefix (concat dir "auto-save/.saves-")
         backup-directory-alist `((".*" . ,(concat dir "backup/")))))
 (setq create-lockfiles nil) ; los .#archivo son symlinks dentro del proyecto
+
+;; =====================================================
+;; Tiempo de carga
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (run-with-timer 0.1 nil
+                            (lambda ()
+                              (message "🚀 Emacs cargó en %s (GCs: %d)"
+                                       (emacs-init-time)
+                                       gcs-done)))))
+
+;; =====================================================
