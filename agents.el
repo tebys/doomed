@@ -15,6 +15,9 @@
   (setq agent-shell-permission-responder-function
         #'agent-shell-permission-allow-always)
 
+  ;; Muestra el costo acumulado de la sesión en el header.
+  (setq agent-shell-show-cost-indicator t)
+
   ;; Autocompactar: al terminar un turno, si el contexto usado supera el
   ;; umbral, se envía /compact al agente.
   (defvar my/agent-shell-compact-threshold 150000
