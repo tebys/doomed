@@ -36,53 +36,33 @@
 ;; =============================================================================
 ;; FUENTE GRANDE AL ESTILO DOOM
 ;; =============================================================================
-(defvar my/font-height-base nil
-  "Altura base (décimas de punto) de la fuente default antes de escalar.")
-
-(defvar my/big-font-ratio 1.5
-  "Factor de aumento para el modo de fuente grande.")
-
-(defun my/ensure-font-height-base ()
-  "Guarda la altura base (décimas de punto) desde la fuente original del frame."
-  (unless my/font-height-base
-    (let ((height (face-attribute 'default :height)))
-      (setq my/font-height-base
-            (cond ((and (numberp height) (>= height 50)) (round height))
-                  ((and (numberp height) (> height 0)) (round (* height 100)))
-                  (t 100))))))
-
-(defun my/clear-local-text-scale ()
-  "Quita el escalado de texto local (text-scale) de todos los buffers.
-El escalado local pisa al global y hace que solo cambie el buffer actual,
-dejando la mode-line, el minibuffer, magit, etc. con el tamaño viejo."
-  (dolist (buffer (buffer-list))
-    (with-current-buffer buffer
-      (when (bound-and-true-p text-scale-mode)
-        (text-scale-mode -1)))))
+(defvar my/font-height-initial 170
+  "Altura inicial de la fuente default (décimas de punto).")
 
 (defun my/set-font-height (height)
   "Aplica HEIGHT (décimas de punto) a la fuente default en toda la interfaz."
-  (my/clear-local-text-scale)
+  (dolist (buffer (buffer-list))
+    (with-current-buffer buffer
+      (when (bound-and-true-p text-scale-mode)
+        (text-scale-mode -1))))
   (set-face-attribute 'default nil :height height))
 
 (defun my/increase-font-size (n)
   "Aumenta la fuente default en N pasos (10 décimas de punto c/u)."
   (interactive "p")
-  (my/ensure-font-height-base)
-  (setq my/font-height-base (+ my/font-height-base (* 10 n)))
-  (my/set-font-height my/font-height-base))
+  (my/set-font-height (+ (round (face-attribute 'default :height)) (* 10 n))))
 
 (defun my/decrease-font-size (n)
   "Disminuye la fuente default en N pasos (10 décimas de punto c/u)."
   (interactive "p")
-  (my/ensure-font-height-base)
-  (setq my/font-height-base (max 50 (- my/font-height-base (* 10 n))))
-  (my/set-font-height my/font-height-base))
+  (my/set-font-height (max 50 (- (round (face-attribute 'default :height))
+                                 (* 10 n)))))
 
 (defun my/reset-font-size ()
-  "Restaura el tamaño base de la fuente default."
+  "Restaura el tamaño inicial de la fuente default."
   (interactive)
-  (my/ensure-font-height-base)
-  (my/set-font-height my/font-height-base))
+  (my/set-font-height my/font-height-initial))
+
+(my/set-font-height my/font-height-initial)
 
 (provide 'ui) ;; Esto permite que Emacs pueda "requerir" este archivo como un módulo
