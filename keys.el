@@ -52,9 +52,6 @@
 (global-set-key (kbd "s--") #'my/decrease-font-size)
 (global-set-key (kbd "s-0") #'my/reset-font-size)
 
-;; Abrir terminal/consola
-(global-set-key (kbd "C-SPC o a") #'agent-shell)
-
 ;; Workspaces (perspectiva) estilo Doom: C-SPC TAB ...
 (defun my/persp-new ()
   "Pide un nombre y crea un workspace nuevo, cambiando a él."

@@ -98,6 +98,7 @@
 ;; El guard (unless persp-mode) evita que la recarga de config duplique el modo.
 (use-package perspective
   :ensure t
+  :bind ("C-SPC o a" . agent-shell)
   :config
   (setq persp-mode-prefix-key (kbd "C-SPC w"))
   (unless persp-mode (persp-mode 1)))
