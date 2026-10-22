@@ -18,14 +18,14 @@
 (setq use-package-always-ensure t) ; Fuerza a que todo se descargue automáticamente
 
 ;; Evita que Emacs reescriba init.el con customizations (eso pisaba líneas)
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(setq custom-file (expand-file-name "lisp/custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
 
 ;; =============================================================================
 ;; 2. CARGAR MÓDULOS PROPIOS (Archivos separados)
 ;; =============================================================================
-(add-to-list 'load-path user-emacs-directory)
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'ui)
 (require 'keys)
 ;; vim.el va DESPUÉS de keys.el porque keys.el libera C-SPC (lo desata el prefijo)

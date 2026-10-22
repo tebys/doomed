@@ -106,8 +106,8 @@
 
 ;; Recargar toda la configuración (init.el y módulos) con C-SPC h r
 (defvar my/config-dir
-  (file-name-directory (or load-file-name buffer-file-name))
-  "Directorio donde vive esta configuración.")
+  (expand-file-name ".." (file-name-directory (or load-file-name buffer-file-name)))
+  "Directorio raíz de esta configuración.")
 
 (defun my/reload-config ()
   "Recarga init.el y los módulos propios de esta configuración."
@@ -116,7 +116,7 @@
     (dolist (feat '(ui keys vim))
       (when (featurep feat)
         (unload-feature feat t)))
-    (add-to-list 'load-path dir)
+    (add-to-list 'load-path (expand-file-name "lisp" dir))
     (load (expand-file-name "init.el" dir) nil t)
     (message "Configuración recargada")))
 
