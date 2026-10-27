@@ -123,19 +123,22 @@
 (defun my/persp-agent-status (name)
   "Estado del agent-shell del proyecto NAME: blocked, busy o ready.
 Si el proyecto tiene varios shells, gana el más urgente."
-  (let ((statuses (cl-loop for buf in (agent-shell-buffers)
-                           when (with-current-buffer buf
-                                  (and (derived-mode-p 'agent-shell-mode)
-                                       (ignore-errors
-                                         (equal name (agent-shell--project-name)))))
-                           collect (agent-shell-status :shell-buffer buf))))
-    (cond ((memq 'blocked statuses) 'blocked)
-          ((memq 'busy statuses) 'busy)
-          ((memq 'ready statuses) 'ready))))
+  (if (and (fboundp 'agent-shell-buffers) (fboundp 'agent-shell-status)
+           (fboundp 'agent-shell--project-name))
+      (let ((statuses (cl-loop for buf in (agent-shell-buffers)
+                               when (with-current-buffer buf
+                                      (and (derived-mode-p 'agent-shell-mode)
+                                           (ignore-errors
+                                             (equal name (agent-shell--project-name)))))
+                               collect (ignore-errors (agent-shell-status :shell-buffer buf)))))
+        (cond ((memq 'blocked statuses) 'blocked)
+              ((memq 'busy statuses) 'busy)
+              ((memq 'ready statuses) 'ready)))
+    nil))
 
 (defun my/persp-agent-annotation (name)
   "Anotación para el candidato NAME: círculo con estado, o vacío."
-  (when-let* ((st (my/persp-agent-status name)))
+  (when-let* ((st (ignore-errors (my/persp-agent-status name))))
     (format "  %s"
             (propertize "●" 'face (pcase st
                                     ('blocked 'agent-shell-error)
