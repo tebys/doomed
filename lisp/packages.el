@@ -154,7 +154,38 @@
   :ensure t
   :after (perspective projectile)
   :config
-  (define-key projectile-command-map (kbd "p") #'projectile-persp-switch-project))
+  ;; projectile-persp-switch-project es frágil: si la perspectiva ya existe solo
+  ;; hace persp-switch (el buffer actual puede ser de otro proyecto), y si es
+  ;; nueva, cancelar el prompt de projectile-find-file deja un *scratch* con el
+  ;; default-directory del proyecto anterior (C-SPC o a reusa el agent-shell
+  ;; equivocado). Esta versión garantiza que el buffer visible sea del proyecto.
+  (defun my/projectile-switch-project (dir)
+    "Cambia a la perspectiva del proyecto DIR, creándola si hace falta."
+    (interactive (list (projectile-completing-read
+                        "Switch to project: " (projectile-relevant-known-projects))))
+    (let ((root (file-name-as-directory (expand-file-name dir))))
+      (unless (or (file-remote-p root) (projectile-project-p root))
+        (projectile-remove-known-project root)
+        (user-error "%s no es un proyecto (sin .git u otro marcador); se quitó de la lista" root))
+      (persp-switch (funcall projectile-project-name-function root))
+      (let ((cur (projectile-project-root)))
+        (unless (and cur (file-equal-p cur root))
+          ;; Si se cancela el prompt de la acción, igual quedamos en el proyecto.
+          (condition-case nil
+              (projectile-switch-project-by-name root)
+            (quit (dired root)))))))
+
+  (defun my/projectile-add-and-switch-project (dir)
+    "Agrega DIR a los proyectos conocidos y cambia a su perspectiva."
+    (interactive (list (read-directory-name "Add and switch to project: ")))
+    (let ((root (file-name-as-directory (expand-file-name dir))))
+      (unless (projectile-project-p root)
+        (user-error "%s no es un proyecto (sin .git u otro marcador)" root))
+      (projectile-add-known-project root)
+      (my/projectile-switch-project root)))
+
+  (define-key projectile-command-map (kbd "p") #'my/projectile-switch-project)
+  (define-key projectile-command-map (kbd "A") #'my/projectile-add-and-switch-project))
 
 ;; NOTA: init.el lo carga con `load` (no con require) para que la recarga de
 ;; config re-ejecute siempre los use-package. Este provide queda para poder
