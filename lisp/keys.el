@@ -30,7 +30,7 @@
 (global-set-key (kbd "C-SPC ,") #'ibuffer)
 
 ;; Magit status con C-SPC g s (gg quedó para "ir al inicio", estilo vim)
-(global-set-key (kbd "C-SPC g g") #'magit-status)
+(global-set-key (kbd "C-x g") #'magit-status)
 
 ;; Moverse entre ventanas con C-S-<flecha> (Ctrl + Shift + flecha),
 ;; dejando S-<flecha> libre para seleccionar texto
