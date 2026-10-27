@@ -11,9 +11,6 @@
 (global-unset-key (kbd "C-SPC"))
 (global-set-key (kbd "C-SPC .") #'find-file)
 
-;; Recargar el buffer actual con C-SPC b r
-(global-set-key (kbd "C-SPC b r") #'revert-buffer)
-
 ;; Todos los buffers con C-SPC b i / matar el actual con C-SPC b d / C-SPC b k
 (global-set-key (kbd "C-SPC b i") #'ibuffer)
 (global-set-key (kbd "C-SPC b d") #'kill-current-buffer)
