@@ -127,7 +127,8 @@
 (use-package dired
   :ensure nil
   :config
-  (setq dired-dwim-target t))
+  (setq dired-dwim-target t)
+  (require 'dired-x))
 
 ;; Terminales
 (use-package eshell
