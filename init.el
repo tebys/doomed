@@ -46,6 +46,17 @@
 (setq save-interprogram-paste-before-kill t)
 
 ;; =============================================================================
+;; 3b. AUTO-REVERT
+;; =============================================================================
+;; Recarga los buffers cuando el archivo cambia en disco (git checkout, agentes
+;; editando, etc.). Con non-file-buffers también se refrescan los dired.
+(global-auto-revert-mode 1)
+(setq global-auto-revert-non-file-buffers t)
+
+;; Preguntas en el minibuffer en vez de diálogos gráficos del sistema.
+(setq use-dialog-box nil)
+
+;; =============================================================================
 ;; 4. ARCHIVOS DE AUTOGUARDADO / RESPALDO / LOCK FUERA DE LOS PROYECTOS
 ;; =============================================================================
 ;; #archivo# (autoguardado), archivo~ (respaldo) y .#archivo (lock) dejan de
