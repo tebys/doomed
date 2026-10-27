@@ -83,6 +83,42 @@
   ;; Para que <s TAB inserte un #+begin_src (estilo Doom).
   (require 'org-tempo))
 
+;; Presentaciones desde un .org: C-SPC o p. Flechas ←/→ cambian de slide
+;; (cada heading de primer nivel es una slide), q sale.
+(use-package visual-fill-column)
+(use-package org-present
+  :after org
+  :bind ("C-SPC o p" . org-present)
+  :config
+  (defun my/org-present-start ()
+    (setq-local face-remapping-alist '((default (:height 1.5) default)
+                                       (header-line (:height 2.0) header-line)
+                                       (org-level-1 (:height 1.75) org-level-1)
+                                       (org-level-2 (:height 1.5) org-level-2)))
+    (setq-local header-line-format " ")
+    (setq-local visual-fill-column-width 90
+                visual-fill-column-center-text t)
+    (visual-fill-column-mode 1)
+    (visual-line-mode 1)
+    (org-display-inline-images)
+    (org-present-hide-cursor)
+    (org-present-read-only))
+
+  (defun my/org-present-end ()
+    (setq-local face-remapping-alist nil)
+    (setq-local header-line-format nil)
+    (visual-fill-column-mode -1)
+    (visual-line-mode -1)
+    (org-remove-inline-images)
+    (org-present-show-cursor)
+    (org-present-read-write))
+
+  (add-hook 'org-present-mode-hook #'my/org-present-start)
+  (add-hook 'org-present-mode-quit-hook #'my/org-present-end)
+  ;; Al cambiar de slide: solo ese heading, con su contenido visible.
+  (add-hook 'org-present-after-navigate-functions
+            (lambda (&rest _) (org-overview) (org-show-entry) (org-show-children))))
+
 (use-package ob-async
   :after org
   :ensure t)
