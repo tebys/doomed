@@ -9,14 +9,7 @@
 ;; C-SPC está reservado por defecto a 'set-mark-command', hay que liberarlo
 ;; para poder usarlo como prefijo.
 (global-unset-key (kbd "C-SPC"))
-(defun my/open-file-or-dir ()
-  "Abre un directorio en Dired; si es un archivo (aunque no exista), lo abre."
-  (interactive)
-  (let ((f (read-file-name "Abrir: ")))
-    (if (file-directory-p f)
-        (dired f)
-      (find-file f))))
-(global-set-key (kbd "C-SPC .") #'my/open-file-or-dir)
+(global-set-key (kbd "C-SPC .") #'find-file)
 
 ;; Recargar el buffer actual con C-SPC b r
 (global-set-key (kbd "C-SPC b r") #'revert-buffer)
