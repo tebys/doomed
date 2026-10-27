@@ -62,6 +62,8 @@
 (use-package projectile
   :config
   (projectile-mode 1)
+  ;; Transcripts de agent-shell: ruido en C-SPC p s g (grep) y en el índice.
+  (add-to-list 'projectile-globally-ignored-directories ".agent-shell")
   (define-key (current-global-map) (kbd "C-SPC p") 'projectile-command-map))
 
 ;; Org-babel: ejecutar bloques de código dentro de org (C-c C-c sobre el bloque).
