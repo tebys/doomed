@@ -18,6 +18,9 @@
 (use-package magit
   :hook C-SPC g g
   :hook C-x g
+  :config
+  (setq ediff-show-ancestor nil)
+  (setq ediff-split-window-function 'split-window-horizontally)
   :custom
   ;; Guarda sin preguntar los buffers modificados del repo antes de pull,
   ;; commit, etc. (el valor por defecto, t, pregunta cada vez).
