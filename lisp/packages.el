@@ -17,6 +17,7 @@
 ;; Control de versiones con Magit
 (use-package magit
   :hook C-SPC g g
+  :hook C-x g
   :custom
   ;; Guarda sin preguntar los buffers modificados del repo antes de pull,
   ;; commit, etc. (el valor por defecto, t, pregunta cada vez).
