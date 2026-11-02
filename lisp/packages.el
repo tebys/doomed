@@ -16,7 +16,6 @@
 
 ;; Control de versiones con Magit
 (use-package magit
-  :hook C-SPC g g
   :hook C-x g
   :config
   (setq ediff-show-ancestor nil)
@@ -68,6 +67,7 @@
   (projectile-mode 1)
   ;; Transcripts de agent-shell: ruido en C-SPC p s g (grep) y en el índice.
   (add-to-list 'projectile-globally-ignored-directories ".agent-shell")
+  (add-to-list 'projectile-ignored-projects (expand-file-name "~/"))
   (define-key (current-global-map) (kbd "C-SPC p") 'projectile-command-map))
 
 ;; Org-babel: ejecutar bloques de código dentro de org (C-c C-c sobre el bloque).
