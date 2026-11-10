@@ -30,12 +30,14 @@
   :mode "\\.fnl\\'")
 
 (use-package paredit
-  :ensure t)
+  :ensure t
+  :hook ((emacs-lisp-mode . paredit-mode)
+         (fennel-mode . paredit-mode)))
 
 (use-package yasnippet
   :ensure t
-  :init
-  (yas-global-mode 1))
+  :hook (agent-shell-mode . yas-minor-mode))
+  
 
 ;; =============================================================================
 ;; MINIBUFFER / M-x al estilo Doom (vertico + orderless + marginalia)
