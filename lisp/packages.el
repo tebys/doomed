@@ -29,7 +29,13 @@
 (use-package fennel-mode
   :mode "\\.fnl\\'")
 
-(use-package paredit)
+(use-package paredit
+  :ensure t)
+
+(use-package yasnippet
+  :ensure t
+  :init
+  (yas-global-mode 1))
 
 ;; =============================================================================
 ;; MINIBUFFER / M-x al estilo Doom (vertico + orderless + marginalia)
