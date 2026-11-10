@@ -29,12 +29,7 @@
 (use-package fennel-mode
   :mode "\\.fnl\\'")
 
-;; Soporte para mise
-(use-package mise
-  :ensure t
-  :commands agent-shell
-  :init
-  (advice-add 'agent-shell :before (lambda (&rest _) (global-mise-mode 1))))
+(use-package paredit)
 
 ;; =============================================================================
 ;; MINIBUFFER / M-x al estilo Doom (vertico + orderless + marginalia)
