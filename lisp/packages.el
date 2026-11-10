@@ -9,11 +9,6 @@
 ;; PAQUETES Y EXTENSIONES
 ;; =============================================================================
 
-(use-package sly
-  :ensure t
-  :commands (sly sly-connect)
-  )
-
 ;; Control de versiones con Magit
 (use-package magit
   :hook C-x g
