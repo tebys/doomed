@@ -30,6 +30,7 @@
 (require 'keys)
 ;; vim.el va DESPUÉS de keys.el porque keys.el libera C-SPC (lo desata el prefijo)
 (require 'vim)
+(require 'org2azw3)
 ;; packages se carga con `load` (no require) para que la recarga de config
 ;; (C-SPC h r) re-ejecute siempre los use-package dentro.
 (load "packages.el" nil t)
