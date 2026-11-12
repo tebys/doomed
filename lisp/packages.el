@@ -47,7 +47,8 @@
 
 (use-package yasnippet
   :ensure t
-  :hook (agent-shell-mode . yas-minor-mode))
+  :hook ((agent-shell-mode . yas-minor-mode)
+	 (org-mode . yas-minor-mode)))
   
 
 ;; =============================================================================
