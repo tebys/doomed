@@ -20,6 +20,17 @@
   ;; commit, etc. (el valor por defecto, t, pregunta cada vez).
   (magit-save-repository-buffers 'dontask))
 
+(use-package corfu
+  :ensure t
+  :custom
+  (corfu-auto t)         ;; Abre el menú automáticamente
+  (corfu-auto-delay 0.2) ;; Tiempo de espera en segundos
+  (corfu-auto-prefix 2)  ;; Caracteres mínimos para mostrar
+  :hook                  ;; Solo cargar para extensiones
+  ((emacs-lisp-mode . corfu-mode)
+   (fennel-mode . corfu-mode)))
+
+
 ;; Servidor de lenguaje (LSP). Viene incluido en Emacs, no se descarga.
 (use-package eglot
   :ensure nil
