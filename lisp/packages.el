@@ -96,6 +96,18 @@
   ;; Para que <s TAB inserte un #+begin_src (estilo Doom).
   (require 'org-tempo))
 
+(add-hook 'org-mode-hook #'visual-line-mode) ;; Word wrap
+(add-hook 'org-mode-hook #'flyspell-mode) ;; Ortografia
+
+(use-package ispell
+  :ensure nil
+  :after org
+  :config
+  (when (executable-find "hunspell")
+    (setq ispell-program-name "hunspell")
+    (setq ispell-really-hunspell t)
+    (setq ispell-dictionary "es_AR")))
+
 ;; Presentaciones desde un .org: C-SPC o p. Flechas ←/→ cambian de slide
 ;; (cada heading de primer nivel es una slide), q sale.
 (use-package visual-fill-column)
