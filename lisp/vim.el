@@ -21,17 +21,8 @@
 ;;   p (pega detrás de la línea)      → C-SPC y P   (C-v sigue siendo pegar)
 ;;   d$/c$/y$ → C-SPC d $ / C-SPC c $ / C-SPC y $
 ;;
-;; Splits: C-w v/s/o/c.  Buscar: C-/ (el / de vim).  gg/G: inicio/fin de buffer.
 ;; Bloque visual (C-v de vim): C-SPC v y luego d/y/c/I/A/O/p/o/q.
 ;; =============================================================================
-
-;; Splits estilo Vim: C-w v (vertical) / C-w s (horizontal)
-;; C-w era 'kill-region' (cortar), se libera para usarlo como prefijo
-(global-unset-key (kbd "C-w"))
-(global-set-key (kbd "C-w v") #'split-window-right)
-(global-set-key (kbd "C-w s") #'split-window-below)
-(global-set-key (kbd "C-w o") #'delete-other-windows)
-(global-set-key (kbd "C-w c") #'delete-window)
 
 ;; ---------------------------------------------------------------------------
 ;; Text objects (i/a) sobre paréntesis y comillas dobles
