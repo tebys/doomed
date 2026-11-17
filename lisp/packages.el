@@ -48,8 +48,10 @@
 (use-package yasnippet
   :ensure t
   :hook ((agent-shell-mode . yas-minor-mode)
-	 (org-mode . yas-minor-mode)))
-  
+	 (org-mode . yas-minor-mode))
+  ;; Sin yas-global-mode nadie carga los snippets: hay que recargarlos a mano.
+  :config (yas-reload-all))
+
 
 ;; =============================================================================
 ;; MINIBUFFER / M-x al estilo Doom (vertico + orderless + marginalia)
